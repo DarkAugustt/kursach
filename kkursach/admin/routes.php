@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_schedule'])) {
     }
 
     // Редирект после добавления
-    header('Location: routes.php');
+    header('Location: schedule.php');
     exit();
 }
 ?>
@@ -114,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_schedule'])) {
 <div class="container bg-dark text-light">
     <form method="post" action="">
         <div class="form-group">
-            <label for="train_id">Выберите автобус:</label>
-            <select class="form-control" id="train_id" name="train_id" required>
+            <label for="auto_id">Выберите автобус:</label>
+            <select class="form-control" id="auto_id" name="auto_id" required>
                 <?php foreach ($autos as $auto) : ?>
                     <option value="<?php echo $auto['id']; ?>"><?php echo $auto['auto_name']; ?></option>
                 <?php endforeach; ?>

@@ -11,6 +11,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
+<?php
+require('../database/database.php');
+$routes = $db->Select("SELECT * FROM `routes`"); ?>
 <script>
     function updateRouteIdAndSubmitForm() {
         // Получаем выбранный маршрут
@@ -70,9 +73,10 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="direction">Выберите направление</label>
-                    <select class="form-control" id="direction" name="direction">
-                        <option value="1">Москва - Санкт-Петербург</option>
-                        <option value="2">Санкт-Петербург - Москва</option>
+                    <select class="form-control" id="direction" name="direction" required>
+                    <?php foreach ($routes as $route) : ?>
+                            <option value="<?php echo $route['id']; ?>"><?php echo $route['departure_station'] . ' - ' . $route['arrival_station']; ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>

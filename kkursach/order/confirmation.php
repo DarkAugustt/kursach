@@ -34,7 +34,7 @@
 
     <div class="container mt-4">
         <h2>Уважаемый пользователь!</h2>
-        <p class="lead">Вы успешно забронировали билет на поезд</p>
+        <p class="lead">Вы успешно забронировали билет на автобус</p>
         <p class="lead">Подробнее о записи вы можете узнать в своём <a href="../user/profile.php">профиле</a></p>
         <a href="../index.php" class="btn btn-primary">На главную</a>
     </div>

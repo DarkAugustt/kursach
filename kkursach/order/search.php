@@ -124,7 +124,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 echo "</tbody></table></div>";
             } else {
-                echo "<p>Рейсы не найдены.</p>";
+                echo "<div class='alert alert-info' role='alert'>
+        Рейсы на выбранную дату отсутствуют. Попробуйте выбрать другую дату или направление.
+    </div>";
+                echo "</div>";
             }
         }
     } else {

@@ -32,7 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_schedule'])) {
     // Обновление статуса рейса
     $db->Update("UPDATE `schedule` SET `status` = :new_status WHERE `id` = :schedule_id", ['new_status' => $newStatus, 'schedule_id' => $scheduleId]);
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Проверка, была ли нажата кнопка "Отправлен"
+    if (isset($_POST['toggle_departure'])) {
+        $scheduleId = $_POST['schedule_id'];
 
+        // Получение текущего статуса рейса
+        $currentStatus = $db->Select("SELECT `status` FROM `schedule` WHERE `id` = :schedule_id", ['schedule_id' => $scheduleId]);
+
+        // Переключение статуса
+        $newStatus = ($currentStatus[0]['status'] == 'Отправлен') ? 'Запланирован' : 'Отправлен';
+
+        // Обновление статуса рейса
+        $db->Update("UPDATE `schedule` SET `status` = :new_status WHERE `id` = :schedule_id", ['new_status' => $newStatus, 'schedule_id' => $scheduleId]);
+    }
+}
 // Получение всех рейсов
 $schedules = $db->Select("SELECT s.*, t.auto_name, r.departure_station, r.arrival_station 
                           FROM `schedule` s
@@ -61,7 +75,6 @@ $schedules = $db->Select("SELECT s.*, t.auto_name, r.departure_station, r.arriva
 
 <body class="bg-dark text-light">
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="../index.php">АврораТур</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +94,9 @@ $schedules = $db->Select("SELECT s.*, t.auto_name, r.departure_station, r.arriva
         </ul>
     </div>
 </nav>
+<div class="container mt-3">
+    <p><a href="panel.php">Вернуться</a></p>
+</div>
 
 <div class="container mt-3">
     <div class="row">
@@ -104,7 +120,8 @@ $schedules = $db->Select("SELECT s.*, t.auto_name, r.departure_station, r.arriva
             <th>Время отправления</th>
             <th>Время прибытия</th>
             <th>Статус</th>
-            <th>Действия</th>
+            <th>Восстановить / Отменить</th>
+            <th>Отправить / Отменить отправку</th>
         </tr>
         </thead>
         <tbody>
@@ -120,8 +137,18 @@ $schedules = $db->Select("SELECT s.*, t.auto_name, r.departure_station, r.arriva
                 <td>
                     <form method="post" action="">
                         <input type="hidden" name="schedule_id" value="<?php echo $schedule['id']; ?>">
+
                         <button type="submit" class="btn <?php echo ($schedule['status'] == 'Отменён') ? 'btn-success' : 'btn-danger'; ?>" name="toggle_schedule">
                             <?php echo ($schedule['status'] == 'Отменён') ? 'Восстановить' : 'Отменить'; ?>
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="">
+                        <input type="hidden" name="schedule_id" value="<?php echo $schedule['id']; ?>">
+
+                        <button type="submit" class="btn btn-primary" name="toggle_departure">
+                            <?php echo ($schedule['status'] == 'Отправлен') ? 'Отменить отправку' : 'Отправить'; ?>
                         </button>
                     </form>
                 </td>
