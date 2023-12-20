@@ -1,0 +1,974 @@
+openapi: 3.0.3
+info:
+  title: АврораТур API
+  version: 1.0.0
+paths:
+  /auth/logic/auth:
+    get:
+      summary: Регистрация пользователя через Telegram
+      description: Регистрация пользователя по данным, полученным от Telegram.
+      operationId: authenticateUser
+      parameters:
+        - name: hash
+          in: query
+          description: Хэш данных от Telegram
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Идентификатор пользователя от Telegram
+          required: true
+          schema:
+            type: integer
+        - name: first_name
+          in: query
+          description: Имя пользователя от Telegram
+          required: true
+          schema:
+            type: string
+        - name: last_name
+          in: query
+          description: Фамилия пользователя от Telegram
+          schema:
+            type: string
+        - name: username
+          in: query
+          description: Юзернейм пользователя от Telegram
+          schema:
+            type: string
+        - name: photo_url
+          in: query
+          description: URL фотографии профиля пользователя от Telegram
+          schema:
+            type: string
+        - name: auth_date
+          in: query
+          description: Время авторизации пользователя от Telegram
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              example:
+                message: Авторизация успешна
+                redirect_url: ../../user/profile.php
+        '401':
+          description: Ошибка авторизации
+          content:
+            application/json:
+              example:
+                error: Неверные учетные данные
+  /auth/login:
+    post:
+      summary: Вход через Telegram
+      description: Авторизация пользователя по данным, полученным от Telegram.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                telegram_id:
+                  type: integer
+                telegram_username:
+                  type: string
+                profile_picture:
+                  type: string
+                auth_date:
+                  type: integer
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              example: { status: 'success', redirect_url: '/user/profile.php' }
+        '400':
+          description: Некорректные данные
+          content:
+            application/json:
+              example: { status: 'error', message: 'Некорректные данные' }
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              example: { status: 'error', message: 'Ошибка выполнения запроса' }
+  /admin/add_routes:
+    get:
+      summary: Получить список всех маршрутов
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                routes:
+                  - id: 1
+                    departure_station: "Станция1"
+                    arrival_station: "Станция2"
+                  - id: 2
+                    departure_station: "Станция3"
+                    arrival_station: "Станция4"
+    post:
+      summary: Добавить новый маршрут
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                departure_station:
+                  type: string
+                arrival_station:
+                  type: string
+      responses:
+        '200':
+          description: Успешное добавление маршрута
+          content:
+            application/json:
+              example:
+                message: "Маршрут успешно добавлен"
+
+  /admin/add_routes/{routeId}:
+    put:
+      summary: Редактировать маршрут по ID
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                departure_station:
+                  type: string
+                arrival_station:
+                  type: string
+      responses:
+        '200':
+          description: Успешное редактирование маршрута
+          content:
+            application/json:
+              example:
+                message: "Маршрут успешно отредактирован"
+
+    delete:
+      summary: Удалить маршрут по ID
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешное удаление маршрута
+          content:
+            application/json:
+              example:
+                message: "Маршрут успешно удален"
+  /admin/autos:
+    get:
+      summary: Получить список всех автобусов
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                autos:
+                  - id: 1
+                    auto_name: "Автобус1"
+                    seats: 30
+                  - id: 2
+                    auto_name: "Автобус2"
+                    seats: 40
+    post:
+      summary: Добавить новый автобус
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                auto_name:
+                  type: string
+                seats:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное добавление автобуса
+          content:
+            application/json:
+              example:
+                message: "Автобус успешно добавлен"
+  /admin/autos/{autoId}:
+    delete:
+      summary: Удалить автобус по ID
+      parameters:
+        - name: autoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешное удаление автобуса
+          content:
+            application/json:
+              example:
+                message: "Автобус успешно удален"
+    put:
+      summary: Редактировать автобус по ID
+      parameters:
+        - name: autoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                edit_name:
+                  type: string
+                edit_seats:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное редактирование автобуса
+          content:
+            application/json:
+              example:
+                message: "Автобус успешно отредактирован"
+  /admin/orders:
+    get:
+      summary: Получить все бронирования
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                tickets:
+                  - id: 1
+                    departure_station: "Откуда"
+                    formatted_departure_time: "12:00"
+                    departure_date: "2023-12-20"
+                    arrival_station: "Куда"
+                    formatted_arrival_time: "15:00"
+                    arrival_date: "2023-12-21"
+                    auto_name: "Название поезда"
+                    seat_number: 10
+                  - id: 2
+                    departure_station: "Откуда2"
+                    formatted_departure_time: "14:00"
+                    departure_date: "2023-12-22"
+                    arrival_station: "Куда2"
+                    formatted_arrival_time: "17:00"
+                    arrival_date: "2023-12-23"
+                    auto_name: "Название поезда2"
+                    seat_number: 20
+  /admin/routes:
+    post:
+      summary: Добавление нового рейса
+      description: Позволяет администратору добавить новый рейс в систему.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                auto_id:
+                  type: integer
+                  description: Идентификатор автобуса
+                route_id:
+                  type: integer
+                  description: Идентификатор маршрута
+                departure_time:
+                  type: string
+                  format: date-time
+                  description: Время отправления
+                arrival_time:
+                  type: string
+                  format: date-time
+                  description: Время прибытия
+      responses:
+        '302':
+          description: Рейс успешно добавлен
+        '401':
+          description: Пользователь не аутентифицирован
+        '403':
+          description: Отказано в доступе 
+  /admin/schedule:
+    get:
+      summary: Получить все рейсы
+      responses:
+        '200':
+          description: Успешный запрос
+    post:
+      summary: Добавить новый рейс
+      responses:
+        '201':
+          description: Рейс успешно добавлен
+  /admin/schedule/{id}:
+    get:
+      summary: Получить информацию о конкретном рейсе
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор рейса
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+    put:
+      summary: Обновить информацию о рейсе
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор рейса
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Рейс успешно обновлен
+    delete:
+      summary: Удалить рейс
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор рейса
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Рейс успешно удален
+  /admin/users:
+    get:
+      summary: Получить список всех пользователей
+      responses:
+        '200':
+          description: Успешный запрос
+    post:
+      summary: Изменить статус администратора пользователя
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Статус администратора пользователя успешно изменен
+  /admin/users/{id}:
+    delete:
+      summary: Удалить пользователя
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Пользователь успешно удален             
+  /order/add_tickets:
+    delete:
+      summary: Удаление устаревших билетов
+      responses:
+        '200':
+          description: Успешное удаление устаревших билетов
+        '500':
+          description: Внутренняя ошибка сервера
+    put:
+      summary: Добавление билетов для указанных маршрутов
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schedule_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - schedule_ids
+      responses:
+        '200':
+          description: Успешное добавление билетов
+        '500':
+          description: Внутренняя ошибка сервера              
+  /order/get_route_id:
+    post:
+      summary: Получение route_id по станциям отправления и прибытия
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+              required:
+                - from
+                - to
+      responses:
+        '200':
+          description: Успешное получение route_id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  route_id:
+                    type: integer
+        '404':
+          description: Нет совпадающего маршрута для указанных станций отправления и прибытия
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'No matching route found for the specified departure and arrival stations.'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal Server Error'   
+  /order/order:
+    post:
+      summary: Бронирование билета
+      description: Осуществляет бронирование билета для указанного пользователя
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                schedule_id:
+                  type: string
+                  description: Идентификатор расписания
+                date:
+                  type: string
+                  format: date
+                  description: Дата отправления
+                auto_id:
+                  type: string
+                  description: Идентификатор автобуса
+                seat:
+                  type: string
+                  description: Выбранное место
+      responses:
+        '302':
+          description: Бронирование успешно. Перенаправление на страницу подтверждения.
+          headers:
+            Location:
+              description: URL страницы подтверждения
+              schema:
+                type: string
+        '400':
+          description: Некорректные входные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid input data'
+        '401':
+          description: Пользователь не аутентифицирован. Перенаправление на страницу входа.
+          headers:
+            Location:
+              description: URL страницы входа
+              schema:
+                type: string
+        '404':
+          description: Не найдено указанное расписание или автобус.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Schedule or bus not found'
+        '409':
+          description: Выбранное место уже занято.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Selected seat is already occupied'
+  /order/process_order:
+    post:
+      summary: Бронирование билета
+      description: Осуществляет бронирование билета для пользователя
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                schedule_id:
+                  type: string
+                  description: Идентификатор расписания
+                date:
+                  type: string
+                  format: date
+                  description: Дата отправления
+                auto_id:
+                  type: string
+                  description: Идентификатор автобуса
+                seat:
+                  type: string
+                  description: Выбранное место
+      responses:
+        '302':
+          description: Бронирование успешно. Перенаправление на страницу подтверждения.
+          headers:
+            Location:
+              description: URL страницы подтверждения
+              schema:
+                type: string
+        '400':
+          description: Некорректные входные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid input data'
+        '401':
+          description: Пользователь не аутентифицирован. Перенаправление на страницу входа.
+          headers:
+            Location:
+              description: URL страницы входа
+              schema:
+                type: string
+        '404':
+          description: Не найдена указанная запись для обновления.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Record not found for update'
+        '409':
+          description: Выбранное место уже занято.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Selected seat is already occupied'
+        '500':
+          description: Внутренняя ошибка сервера при обновлении записи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal server error while updating record'
+  /order/reserve_seat:
+    post:
+      summary: Бронирование билета
+      description: Бронирует место на автобусе и привязывает его к текущему пользователю.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ticket_id:
+                  type: string
+                  description: Идентификатор билета, который требуется забронировать.
+      responses:
+        '200':
+          description: Успешное бронирование билета.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Место успешно забронировано.'
+        '400':
+          description: Некорректные входные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid input data'
+        '404':
+          description: Билет с указанным идентификатором не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Ticket not found'
+        '500':
+          description: Внутренняя ошибка сервера при обновлении записи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal server error while updating record'
+  /order/search:
+    post:
+      summary: Получение расписания автобусов
+      description: Возвращает расписание автобусов для указанных параметров.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                route_id:
+                  type: string
+                  description: Идентификатор маршрута.
+                date:
+                  type: string
+                  format: date
+                  description: Дата, для которой запрашивается расписание.
+      responses:
+        '200':
+          description: Успешный запрос. Возвращает расписание автобусов.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        auto_name:
+                          type: string
+                          description: Название автобуса.
+                        departure_station:
+                          type: string
+                          description: Название станции отправления.
+                        arrival_station:
+                          type: string
+                          description: Название станции прибытия.
+                        departure_time:
+                          type: string
+                          format: time
+                          description: Время отправления.
+                        arrival_time:
+                          type: string
+                          format: time
+                          description: Время прибытия.
+                        num_tickets:
+                          type: integer
+                          description: Количество доступных билетов.
+                        schedule_id:
+                          type: string
+                          description: Идентификатор расписания.
+        '400':
+          description: Некорректные входные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid input data'
+  /order/tickets:
+    post:
+      summary: Получение расписания автобусов
+      description: Возвращает расписание автобусов на основе выбранного направления и даты.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                route_id:
+                  type: string
+                  description: Идентификатор маршрута.
+                date:
+                  type: string
+                  format: date
+                  description: Дата, для которой запрашивается расписание.
+      responses:
+        '200':
+          description: Успешный запрос. Возвращает расписание автобусов.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schedule:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        auto_name:
+                          type: string
+                          description: Название автобуса.
+                        departure_station:
+                          type: string
+                          description: Название станции отправления.
+                        arrival_station:
+                          type: string
+                          description: Название станции прибытия.
+                        departure_time:
+                          type: string
+                          format: time
+                          description: Время отправления.
+                        arrival_time:
+                          type: string
+                          format: time
+                          description: Время прибытия.
+                        num_tickets:
+                          type: integer
+                          description: Количество доступных билетов.
+                        schedule_id:
+                          type: string
+                          description: Идентификатор расписания.
+        '400':
+          description: Некорректные входные данные.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid input data'
+  /profile:
+    get:
+      summary: Получить профиль пользователя и историю бронирований
+      description: Получить информацию о профиле пользователя и истории его бронирований
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              example:
+                profile:
+                  firstName: John
+                  telegramID: 123456
+                  telegramUsername: john_doe
+                  userID: 1
+                  isAdmin: false
+                bookings:
+                  - id: 1
+                    departure_station: 'Станция А'
+                    arrival_station: 'Станция Б'
+                    auto_name: 'Автобус 1'
+                    seat_number: 5
+                    schedule_status: 'Запланировано'
+                    formatted_departure_time: '10:00'
+                    departure_date: '2023-12-31'
+                    formatted_arrival_time: '12:00'
+                    arrival_date: '2023-12-31'
+                  - id: 2
+                    departure_station: 'Станция В'
+                    arrival_station: 'Станция Г'
+                    auto_name: 'Автобус 2'
+                    seat_number: 8
+                    schedule_status: 'Запланировано'
+                    formatted_departure_time: '14:00'
+                    departure_date: '2023-12-31'
+                    formatted_arrival_time: '16:00'
+                    arrival_date: '2023-12-31'
+        '401':
+          description: Не авторизован
+    post:
+      summary: Отменить бронирование
+      description: Отменить бронирование автобуса
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                cancel_booking:
+                  type: integer
+                  description: ID билета для отмены
+              required:
+                - cancel_booking
+      responses:
+        '200':
+          description: Бронирование успешно отменено
+          content:
+            text/plain:
+              example: 'Бронирование успешно отменено'
+        '404':
+          description: Не найдено
+        '500':
+          description: Внутренняя ошибка сервера
+components:
+  schemas:
+    users:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        telegram_id:
+          type: string
+        telegram_username:
+          type: string
+        profile_picture:
+          type: string
+        auth_date:
+          type: integer
+        is_admin:
+          type: integer
+
+    autos:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор автобуса
+        auto_name:
+          type: string
+          description: Название автобуса
+        seats:
+          type: integer
+          description: Количество мест в автобусе
+    routes:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор маршрута
+        departure_station:
+          type: string
+          description: Название станции отправления
+        arrival_station:
+          type: string
+          description: Название станции прибытия
+    schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор рейса
+        auto_id:
+          type: integer
+          description: Идентификатор автобуса
+        route_id:
+          type: integer
+          description: Идентификатор маршрута
+        departure_time:
+          type: string
+          format: date-time
+          description: Время отправления
+        arrival_time:
+          type: string
+          format: date-time
+          description: Время прибытия
+        status:
+          type: string
+          description: Статус рейса
+    tickets:
+      type: object
+      properties:
+        id: 
+          type: integer
+          description: Идентификатор билета
+        schedule_id: 
+          type: integer
+          description: Идентификатор рейса
+        user_id: 
+          type: integer
+          description: Идентификатор пользователя
+        seat_number: 
+          type: integer
+          description: Номер места
+        status: 
+          type: string
+          description: Статус билета
+        date: 
+          type: string
+          format: date-time
+          description: Дата билета
+        
+
+  securitySchemes:
+    TelegramAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://telegram.org/js/telegram-widget.js?22'
+          tokenUrl: 'https://example.com/token'
+          scopes:
+            read: Доступ к данным Telegram пользователя
+    
+  
+  
+  
