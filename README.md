@@ -45,4 +45,4 @@
 ## Документация
 https://github.com/DarkAugustt/kursach/blob/main/openapi.yaml
 ## Развёртывание 
-Для развёртывания у себя или на сервере в директории /var/www/html в терминале пропишите git clone https://github.com/DarkAugustt/BusBooking.git. В phpmyadmin импортируйте дамп базы данных. Настройте в database/config.php необходимые параметры. Для авторизации через Telegram создайте у @BotFather бота и укажите /setdomain с вашим доменом.
+Для развёртывания у себя или на сервере в директории /var/www/html в терминале пропишите git clone https://github.com/DarkAugustt/BusBooking.git (доступ ограничен некоторое время). В phpmyadmin импортируйте дамп базы данных. Настройте в database/config.php необходимые параметры. Для авторизации через Telegram создайте у @BotFather бота и укажите /setdomain с вашим доменом.
