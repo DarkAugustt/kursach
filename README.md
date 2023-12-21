@@ -33,6 +33,7 @@
 ![Изображение](https://github.com/DarkAugustt/kursach/blob/main/Интерфейс.png)
 ## Диаграммы
 ![Изображение](https://github.com/DarkAugustt/kursach/blob/main/diagram.jpg)
+![Изображение](https://github.com/DarkAugustt/kursach/blob/main/diagram.jpg)
 ## Архитектура системы
 ##### API сервера:
 ## Описание базы данных:
